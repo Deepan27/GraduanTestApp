@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -11,14 +12,20 @@ import android.widget.Toast;
 import com.deepcode.graduantestapp.ApiClient;
 import com.deepcode.graduantestapp.R;
 import com.deepcode.graduantestapp.interfaces.ApiService;
-import com.deepcode.graduantestapp.model.Bearer;
 import com.deepcode.graduantestapp.model.FormData;
 import com.deepcode.graduantestapp.util.TokenManager;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -58,21 +65,27 @@ public class LoginActivity extends AppCompatActivity {
 
     private void login(String email, String password) {
         FormData formData = new FormData(email, password);
-        Call<Bearer> call = apiService.login(formData);
-        call.enqueue(new Callback<Bearer>() {
+        Call<ResponseBody> call = apiService.login(formData);
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<Bearer> call, Response<Bearer> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.body()!=null) {
-                    Bearer bearer = response.body();
-                    TokenManager.getInstance(LoginActivity.this).saveAccessToken(bearer.getToken());
+                    String responseString = null;
+                    try {
+                        responseString = response.body().string();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    TokenManager.getInstance(LoginActivity.this).saveAccessToken(responseString);
                     Intent intent = new Intent(LoginActivity.this,MainActivity.class);
                     startActivity(intent);
                 }
             }
 
             @Override
-            public void onFailure(Call<Bearer> call, Throwable t) {
-
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d("TAG", "onFailure: " + t.getStackTrace());
             }
         });
     }

@@ -1,9 +1,5 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/menu_post_list"
-        android:title="Post List"
-        android:icon="@drawable/ic_post_list" />
-    <item
         android:id="@+id/menu_post_create"
         android:title="Post Create"
         android:icon="@drawable/ic_post_create" />

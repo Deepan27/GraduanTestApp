@@ -103,13 +103,12 @@ public class UserProfileFragment extends Fragment {
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                if (response.body()!=null){
+                if (response.body()!=null && response.isSuccessful()){
                     String strLogout = response.body();
-                    if (strLogout.equals("Logout")){
-                        TokenManager.getInstance(getContext()).clearAccessToken();
+                    Toast.makeText(getContext(), strLogout, Toast.LENGTH_LONG).show();
+                    TokenManager.getInstance(getContext()).clearAccessToken();
                         Intent intent = new Intent(getContext(), LoginActivity.class);
                         startActivity(intent);
-                    }
                 }
             }
 

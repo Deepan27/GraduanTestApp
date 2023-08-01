@@ -10,7 +10,6 @@ import android.view.MenuItem;
 
 import com.deepcode.graduantestapp.R;
 import com.deepcode.graduantestapp.fragment.PostCreateFragment;
-import com.deepcode.graduantestapp.fragment.PostListFragment;
 import com.deepcode.graduantestapp.fragment.UserProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -23,12 +22,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
 
         // Set the initial fragment
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new PostListFragment())
+                .replace(R.id.fragment_container, new PostCreateFragment())
                 .commit();
     }
 
@@ -36,9 +36,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment selectedFragment = null;
 
-        if (item.getItemId() == R.id.menu_post_list) {
-            selectedFragment = new PostListFragment();
-        } else if (item.getItemId() == R.id.menu_post_create) {
+        if (item.getItemId() == R.id.menu_post_create) {
             selectedFragment = new PostCreateFragment();
         } else if (item.getItemId() == R.id.menu_user_profile) {
             selectedFragment = new UserProfileFragment();
